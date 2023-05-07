@@ -108,7 +108,9 @@ function padHandler(event) {
   const { color } = event.target.dataset;
   if (!color) return;
 
-  // TODO: Write your code here.
+  const pad = pads.find(p => p.color === color);
+  pad.sound.play();
+  checkPress(color);
   return color;
 }
 
@@ -274,7 +276,7 @@ function activatePads(sequence) {
  */
 function playHumanTurn() {
   padContainer.classList.remove("unclickable");
-  const statusText = `Player's turn: ${maxRoundCount - roundCount} remaining.`
+  const statusText = `Player's turn: ${maxRoundCount} remaining.`
   setText(statusSpan, statusText);
 }
 
@@ -301,7 +303,21 @@ function playHumanTurn() {
  *
  */
 function checkPress(color) {
-  // TODO: Write your code here.
+  playerSequence.push(color);
+  const index = playerSequence.length - 1;
+  const remainingPresses = computerSequence.length - playerSequence.length;
+
+  const statusText = `Player's turn: ${remainingPresses} presses remaining.`
+  setText(statusSpan, statusText);
+
+  if (computerSequence[index] !== color) {
+    resetGame(`Wrong color. The color was ${computerSequence[index]}!`);
+    return;
+  }
+
+  if (remainingPresses === 0) {
+    checkRound();
+  }
 }
 
 /**
@@ -320,7 +336,15 @@ function checkPress(color) {
  */
 
 function checkRound() {
-  // TODO: Write your code here.
+  if (playerSequence.length === maxRoundCount) {
+    resetGame("Round Complete!");
+    return;
+  }
+  roundCount++;
+  playerSequence = [];
+
+  setText(statusSpan, "Nice!");
+  setTimeout(playComputerTurn, 1000);
 }
 
 /**
@@ -333,14 +357,17 @@ function checkRound() {
  * 3. Reset `roundCount` to an empty array
  */
 function resetGame(text) {
-  // TODO: Write your code here.
+  console.log(text);
+  computerSequence = [];
+  playerSequence = [];
+  roundCount = 0;
 
   // Uncomment the code below:
-  // alert(text);
-  // setText(heading, "Simon Says");
-  // startButton.classList.remove("hidden");
-  // statusSpan.classList.add("hidden");
-  // padContainer.classList.add("unclickable");
+  alert(text);
+  setText(heading, "Simon Says");
+  startButton.classList.remove("hidden");
+  statusSpan.classList.add("hidden");
+  padContainer.classList.add("unclickable");
 }
 
 /**
