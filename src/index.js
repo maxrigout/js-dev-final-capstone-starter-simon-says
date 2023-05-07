@@ -79,7 +79,7 @@ startButton.onclick = startButtonHandler;
  *
  */
 function startButtonHandler() {
-  setLevel();
+  maxRoundCount = setLevel();
   roundCount++;
   startButton.classList.add("hidden");
   statusSpan.classList.remove("hidden");
