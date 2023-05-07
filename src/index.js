@@ -172,7 +172,7 @@ function getRandomItem(collection) {
  * Sets the status text of a given HTML element with a given a message
  */
 function setText(element, text) {
-  // TODO: Write your code here.
+  element.textContent = text;
   return element;
 }
 
@@ -190,7 +190,18 @@ function setText(element, text) {
  */
 
 function activatePad(color) {
-  // TODO: Write your code here.
+  // find the pad object from the color
+  const pad = pads.find(p => p.color === color);
+  // activate the pad
+  pad.selector.classList.add("activated");
+
+  // play the sound
+  pad.sound.play();
+
+  // de-activate the pad after 500ms
+  setTimeout(() => {
+    pad.selector.classList.remove("activated");
+  }, 500);
 }
 
 /**
@@ -208,7 +219,12 @@ function activatePad(color) {
  */
 
 function activatePads(sequence) {
-  // TODO: Write your code here.
+  sequence.forEach((color, index) => {
+    // activate each pads with at a 600ms interval
+    setTimeout(() => {
+      activatePad(color)
+    }, 600 * (index + 1));
+  });
 }
 
 /**
@@ -235,8 +251,17 @@ function activatePads(sequence) {
  * sequence.
  */
  function playComputerTurn() {
-  // TODO: Write your code here.
+  // disable clicking of the pads
+  padContainer.classList.add("unclickable");
+  // update the UI
+  setText(statusSpan, "The computer's turn...");
+  setText(heading, `Round ${roundCount} of ${maxRoundCount}`);
 
+  // get the color to click
+  const nextColor = getRandomItem(pads).color;
+  computerSequence.push(nextColor);
+  
+  activatePads(computerSequence)
   setTimeout(() => playHumanTurn(roundCount), roundCount * 600 + 1000); // 5
 }
 
@@ -248,7 +273,9 @@ function activatePads(sequence) {
  * 2. Display a status message showing the player how many presses are left in the round
  */
 function playHumanTurn() {
-  // TODO: Write your code here.
+  padContainer.classList.remove("unclickable");
+  const statusText = `Player's turn: ${maxRoundCount - roundCount} remaining.`
+  setText(statusSpan, statusText);
 }
 
 /**
