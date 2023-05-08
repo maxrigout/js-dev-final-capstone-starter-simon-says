@@ -88,10 +88,14 @@ function startButtonHandler() {
   roundCount++;
   startButton.classList.add("hidden");
   statusSpan.classList.remove("hidden");
+  levelButtonContainer.classList.add("unclickable");
   playComputerTurn();
   return { startButton, statusSpan };
 }
 
+/*
+ The handler function for the level buttons
+*/
 function levelButtonHandler(event) {
   console.log("level button handler");
   const { level } = event.target.dataset;
@@ -384,11 +388,18 @@ function resetGame(text) {
   startButton.classList.remove("hidden");
   statusSpan.classList.add("hidden");
   padContainer.classList.add("unclickable");
+  levelButtonContainer.classList.remove("unclickable")
 }
 
+/*
+  Updates the UI and stores which level was selected
+*/
 function selectLevel(level) {
+  // store the selected level in a global variable
   levelSelected = level;
+  // unselect all the buttons
   levelButtons.forEach(btn => btn.classList.remove("level-button-selected"));
+  // select the appropriate button
   levelButtons[level-1].classList.add("level-button-selected");
 }
 
