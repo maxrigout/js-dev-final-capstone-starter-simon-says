@@ -6,6 +6,8 @@
  const statusSpan = document.querySelector(".js-status");
  const heading = document.querySelector(".js-heading");
  const padContainer = document.querySelector(".js-pad-container");
+ const levelButtonContainer = document.querySelector(".js-level-container");
+ const levelButtons = document.querySelectorAll(".js-level-button");
 
 /**
  * VARIABLES
@@ -14,6 +16,8 @@ let computerSequence = []; // track the computer-generated sequence of pad press
 let playerSequence = []; // track the player-generated sequence of pad presses
 let maxRoundCount = 0; // the max number of rounds, varies with the chosen level
 let roundCount = 0; // track the number of rounds that have been played so far
+const saysInterval = 600;
+let levelSelected = 1;
 
 /**
  *
@@ -58,6 +62,7 @@ let roundCount = 0; // track the number of rounds that have been played so far
  */
 
 padContainer.addEventListener("click", padHandler);
+levelButtonContainer.onclick = levelButtonHandler;
 startButton.onclick = startButtonHandler;
 
 /**
@@ -79,12 +84,20 @@ startButton.onclick = startButtonHandler;
  *
  */
 function startButtonHandler() {
-  maxRoundCount = setLevel();
+  maxRoundCount = setLevel(levelSelected);
   roundCount++;
   startButton.classList.add("hidden");
   statusSpan.classList.remove("hidden");
   playComputerTurn();
   return { startButton, statusSpan };
+}
+
+function levelButtonHandler(event) {
+  console.log("level button handler");
+  const { level } = event.target.dataset;
+  if (!level) return;
+
+  selectLevel(Number(level));
 }
 
 /**
@@ -105,6 +118,9 @@ function startButtonHandler() {
  * 6. Return the `color` variable as the output
  */
 function padHandler(event) {
+  console.log("pad Handler", event);
+  console.log("pad Handler", event.target.dataset);
+  console.log("pad Handler", event.target.dataset.color);
   const { color } = event.target.dataset;
   if (!color) return;
 
@@ -225,7 +241,7 @@ function activatePads(sequence) {
     // activate each pads with at a 600ms interval
     setTimeout(() => {
       activatePad(color)
-    }, 600 * (index + 1));
+    }, saysInterval * (index + 1));
   });
 }
 
@@ -276,7 +292,7 @@ function activatePads(sequence) {
  */
 function playHumanTurn() {
   padContainer.classList.remove("unclickable");
-  const statusText = `Player's turn: ${maxRoundCount} remaining.`
+  const statusText = `Player's turn: ${computerSequence.length} remaining.`
   setText(statusSpan, statusText);
 }
 
@@ -368,6 +384,12 @@ function resetGame(text) {
   startButton.classList.remove("hidden");
   statusSpan.classList.add("hidden");
   padContainer.classList.add("unclickable");
+}
+
+function selectLevel(level) {
+  levelSelected = level;
+  levelButtons.forEach(btn => btn.classList.remove("level-button-selected"));
+  levelButtons[level-1].classList.add("level-button-selected");
 }
 
 /**
