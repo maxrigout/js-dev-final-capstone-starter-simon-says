@@ -122,9 +122,6 @@ function levelButtonHandler(event) {
  * 6. Return the `color` variable as the output
  */
 function padHandler(event) {
-  console.log("pad Handler", event);
-  console.log("pad Handler", event.target.dataset);
-  console.log("pad Handler", event.target.dataset.color);
   const { color } = event.target.dataset;
   if (!color) return;
 
